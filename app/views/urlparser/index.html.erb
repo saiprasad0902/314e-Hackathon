@@ -1,0 +1,56 @@
+<style>
+    table {
+        width:100%;
+    }
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 15px;
+        text-align: left;
+    }
+    #t01 tr:nth-child(even) {
+        background-color: #eee;
+    }
+    #t01 tr:nth-child(odd) {
+        background-color: #fff;
+    }
+    #t01 th {
+        background-color: black;
+        color: white;
+    }
+</style>
+<%= form_tag(urlparser_index_path, :method => "get") do %>
+  <% flash.each do |type, msg| %>
+    <div>
+      <%= msg %>
+    </div>
+  <% end %>
+  <input type="text" placeholder= "Enter a valid URL" name="url" id="url">
+  <%= submit_tag("Search", class: 'form-control btn btn-success') %>
+<% end %>
+</br>
+<% if !@pages.nil? %>
+  <% @pages.each_with_index do |data, index| %>
+    <% if index == 0 %>
+      <p> This is the <b>parent</b> url search result for (<b><%=data.instance_variable_get(:@url).to_s %></b>)</p>
+    <% else %>
+      <p> This is the <b>child</b> url search result for (<b><%=data.instance_variable_get(:@url).to_s %></b>)</p>
+    <% end %>
+      <table style="width:100%">
+        <tr>
+          <th>Frequent Word Count</th>
+          <th>Frequent Pair Word Count</th>
+          <th>Links</th>
+        </tr>
+        <tr>
+            <td><%= data.instance_variable_get(:@frequent_words).to_a.split(',').to_s.html_safe %></td>
+            <td><%= data.instance_variable_get(:@frequent_word_pairs).to_a.split(',').to_s.html_safe  %></td>
+            <td><%= data.instance_variable_get(:@links).to_a.split(',').to_s.html_safe  %></td>
+        </tr>
+      </table>
+  <% end %>
+<% end %>
+
+
