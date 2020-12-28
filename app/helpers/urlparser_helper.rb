@@ -74,12 +74,12 @@ module UrlparserHelper
       highest_wf_count = word_count.values.max
       while max_word_count != 0
           highest_wf_words = word_count.select { |key, value| value == highest_wf_count }
-        if !highest_wf_words.empty? && check_for_a_special_charachter(highest_wf_words[0])
-          frequent_word.store(highest_wf_words[0],highest_wf_count)
+        if !highest_wf_words.empty? && check_for_a_special_charachter(highest_wf_words.keys[0])
+          frequent_word.store(highest_wf_words.keys[0],highest_wf_count)
           highest_wf_count = highest_wf_count - 1
           max_word_count = max_word_count - 1
         else
-          if highest_wf_count >= 1
+          if !highest_wf_count.nil? && highest_wf_count >= 1
             highest_wf_count = highest_wf_count - 1
           else
             break
@@ -92,7 +92,7 @@ module UrlparserHelper
 
     def get_frequent_pair_words
       frequent_pair_word = Hash.new
-      max_pair_word_count = 10
+      max_pair_word_count = 0
       pair_words = Hash.new
       a_text_data  = @page_text_data.split
       a_text_data.each_with_index do |text , index|
@@ -105,20 +105,21 @@ module UrlparserHelper
                   value = frequent_pair_word[a_text_data[counter] + " " + a_text_data[counter+1]]
                   value = value + 1
                   frequent_pair_word[a_text_data[counter] + " " + a_text_data[counter+1]] = value
+                  break
                 else
                   frequent_pair_word.store(a_text_data[counter] + " " + a_text_data[counter+1],1)
+                  break
                 end
              end
           end
         end
       end
       ten_p_words = Hash.new
-      count = 0
       pair_words = Hash[frequent_pair_word.sort_by { |k,v| [-1 * v] }]
       pair_words.each do | key, value |
-        break if count == 10
+        break if max_pair_word_count == 10
         ten_p_words.store(key,value)
-        count = count +1
+        max_pair_word_count = max_pair_word_count + 1
       end
       @frequent_word_pairs = ten_p_words
     end

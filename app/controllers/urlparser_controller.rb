@@ -7,6 +7,7 @@ class UrlparserController < ApplicationController
     @pages = []
     flash.alert = ""
     @url = params[:url]
+    @parent_depth = params[:parent]
     if @url.nil? || @url == ""
       flash.alert = "URL cant be empty"
     elsif !(@url.nil? || @url == "") && (!valid_url?(@url))
@@ -20,8 +21,10 @@ class UrlparserController < ApplicationController
                            url: @url))
       primary_links = @pages[0].instance_variable_get(:@links)
       primary_links.each_with_index do |(key, value), index|
-        if index > 4
-          break
+        if @parent_depth.present? && @parent_depth != "all" && @parent_depth.to_i < primary_links.length
+          if index >= @parent_depth.to_i
+            break
+          end
         end
         parser.fetch_all(value)
         @pages.push(Page.new(frequent_words: parser.instance_variable_get(:@frequent_words),
