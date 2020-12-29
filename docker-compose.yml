@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  development:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/314e_WordFrequency
+    ports:
+      - '3000:3000'
