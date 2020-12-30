@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Cloning our Git') {
             steps {
-                git 'https://github.com/YourGithubAccount/YourGithubRepository.git'
+                git 'https://github.com/saiprasad0902/314e-Hackathon.git/'
             }
         }
         stage('Building our image') {
